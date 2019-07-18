@@ -36,7 +36,7 @@
 // const SESSION_DURATION = 1000;
 
 
-export async function decodeJSONwebToken(jsonWebToken: string) {
+export async function decodeJsonWebToken(jsonWebToken: string) {
 
   const payload = await jwt.verify(jsonWebToken, RSA_PUBLIC_KEY);
 
