@@ -8,27 +8,21 @@ export function retrieveUserIdFromRequest(request: Request, response: Response, 
   if (jsonWebToken) {
     handleSessionCookie(jsonWebToken, request)
       .then(() => next())
-      .catch(err => {
-        console.error(err);
+      .catch(error => {
+        console.error(error);
         next();
-      })
+      });
   } else {
     next();
   }
 }
 
-
-
-async function handleSessionCookie(jwt: string, req: Request) {
+async function handleSessionCookie(jsonWebToken: string, request: Request) {
   try {
-
-    const payload = await decodeJsonWebToken(jwt);
-
-    req['user'] = payload;
-
-  }
-  catch (err) {
-    console.log('Error: Could not extract user from request:', err.message);
+    const payload = await decodeJsonWebToken(jsonWebToken);
+    request['user'] = payload;
+  } catch (error) {
+    console.error('Error: Could not extract user from request:', error.message);
   }
 }
 

@@ -1,60 +1,31 @@
-// import { DatabaseUser } from './database-user';
+import { DatabaseUser } from './database-user';
 
-// const util = require('util');
-// const randomBytes = util.promisify(require('crypto').randomBytes);
+const util = require('util');
+const fileSystem = require('fs');
+const jsonwebtoken = require('jsonwebtoken');
+const signJsonWebToken = util.promisify(jsonwebtoken.sign);
+const randomBytes = util.promisify(require('crypto').randomBytes);
 
-// export async function createCsrfToken() {
-//   return await randomBytes(32).then(bytes => bytes.toString('hex'));
-// }
+const RSA_PUBLIC_KEY = fileSystem.readFileSync('./demos/public.key');
+const RSA_PRIVATE_KEY = fileSystem.readFileSync('./demos/private.key');
 
-// export async function createSessionToken(user: DatabaseUser) {
-//   return signJwt({
-//     roles: user.roles
-//   },
-//     RSA_PRIVATE_KEY, {
-//       algorithm: 'RS256',
-//       expiresIn: 7200,
-//       subject: user.id.toString()
-//     });
-// }
-
-// import * as jwt from 'jsonwebtoken';
-// import * as fs from "fs";
-// import * as argon2 from 'argon2';
-// import { DbUser } from "./db-user";
-
-
-// export const randomBytes = util.promisify(crypto.randomBytes);
-
-// export const signJwt = util.promisify(jwt.sign);
-
-
-// const RSA_PRIVATE_KEY = fs.readFileSync('./demos/private.key');
-
-// const RSA_PUBLIC_KEY = fs.readFileSync('./demos/public.key');
-
-// const SESSION_DURATION = 1000;
-
-
-export async function decodeJsonWebToken(jsonWebToken: string) {
-
-  const payload = await jwt.verify(jsonWebToken, RSA_PUBLIC_KEY);
-
-  console.log('decoded JWT payload', payload);
-
+export async function decodeJsonWebToken(token: string) {
+  const payload = jsonwebtoken.verify(token, RSA_PUBLIC_KEY);
+  console.log('[security.utils.ts][decodeJsonWebToken] Decoded Json Web Token payload', payload);
   return payload;
 }
 
+export async function createSessionToken(databaseUser: DatabaseUser) {
+  return signJsonWebToken({
+    roles: databaseUser.roles
+  },
+    RSA_PRIVATE_KEY, {
+      algorithm: 'RS256',
+      expiresIn: 7200,
+      subject: databaseUser.id.toString()
+    });
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
+export async function createCsrfToken() {
+  return await randomBytes(32).then(bytes => bytes.toString('hex'));
+}
