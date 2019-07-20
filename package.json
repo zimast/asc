@@ -2,6 +2,7 @@
   "name": "asc",
   "version": "0.0.0",
   "scripts": {
+    "start": "ng serve --proxy-config ./proxy.json --ssl --ssl-key key.pem --ssl-cert cert.pem",
     "start-server": "./node_modules/.bin/ts-node ./server/server.ts --secure",
     "server": "./node_modules/.bin/nodemon  -w ./server --ext \".ts\" --exec \"npm run start-server\""
   },
