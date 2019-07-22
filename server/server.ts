@@ -1,10 +1,8 @@
 import { Application } from 'express';
-// import * as _ from 'lodash';
-const _ = require('lodash');
-// import * as https from 'https';
-const https = require('https');
-// import * as fileSystem from 'fs';
-const fileSystem = require('fs');
+import * as express from 'express';
+import * as _ from 'lodash';
+import * as https from 'https';
+import * as fileSystem from 'fs';
 import { checkIfAuthenticated } from './authentication.middleware';
 import { checkIfAuthorized } from './authorization.middleware';
 import { createUser } from './create-user.route';
@@ -16,7 +14,6 @@ import { checkCsrfToken } from './csfr.middleware';
 import { logout } from './logout.route';
 import { login } from './login.route';
 
-const express = require('express');
 const app: Application = express();
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
