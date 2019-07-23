@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Lesson } from '../models/lesson';
 import { LessonsService } from '../services/lessons.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-lessons',
@@ -15,7 +16,7 @@ export class LessonsComponent implements OnInit {
   constructor(private lessonsService: LessonsService) { }
 
   ngOnInit() {
-    this.lessons$ = this.lessonsService.loadAllLessons();
+    this.lessons$ = this.lessonsService.loadAllLessons().pipe(map((lessons: any) => lessons.lessons));
   }
 
 }
