@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LessonsComponent } from './lessons/lessons.component';
+import { SignupComponent } from './signup/signup.component';
 // import { LoginComponent } from "./login/login.component";
 // import { SignupComponent } from "./signup/signup.component";
 
@@ -12,10 +13,10 @@ export const routesConfig: Routes = [
     //     path: 'login',
     //     component: LoginComponent
     // },
-    // {
-    //     path: 'signup',
-    //     component: SignupComponent
-    // },
+    {
+        path: 'signup',
+        component: SignupComponent
+    },
     {
         path: '',
         redirectTo: '/lessons',
