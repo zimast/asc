@@ -4,6 +4,8 @@ import * as fs from 'fs';
 import * as https from 'https';
 import { readAllLessons } from "./read-all-lessons.route";
 
+// BH1P05
+
 const bodyParser = require('body-parser');
 const app: Application = express();
 
@@ -20,6 +22,8 @@ const options = commandLineArgs(optionDefinitions);
 // REST API
 app.route('/api/lessons')
   .get(readAllLessons);
+
+console.log('options.secure: ', options.secure);
 
 if (options.secure) {
   const httpsServer = https.createServer({

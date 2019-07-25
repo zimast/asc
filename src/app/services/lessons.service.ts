@@ -9,11 +9,11 @@ export class LessonsService {
 
   constructor(private http: HttpClient) {}
 
-  loadAllLessons() {
+  public loadAllLessons() {
       return this.http.get<Lesson[]>('/api/lessons');
   }
 
-  findLessonById(id:number) {
+  public findLessonById(id:number) {
       return this.http.get<Lesson>('/api/lessons/' + id);
   }
 }
