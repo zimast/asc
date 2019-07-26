@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { User } from '../models/user';
-import { map } from 'rxjs/operators';
+import { map, shareReplay, tap } from 'rxjs/operators';
 
 export const ANONYMOUS_USER: User = {
   id: undefined,
@@ -22,5 +22,11 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public signUp(email: string, password: string) { }
+  public signUp(email: string, password: string): Observable<User> {
+    return this.httpClient.post<User>('/api/signup', { email, password})
+      .pipe(
+        shareReplay(),
+        tap(user => this.subject.next(user))
+      );
+  }
 }
