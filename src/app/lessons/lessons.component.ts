@@ -20,7 +20,7 @@ export class LessonsComponent implements OnInit {
   constructor(private readonly lessonsService: LessonsService) { }
 
   ngOnInit() {
-    this.lessons$ = this.lessonsService.loadAllLessons().pipe(map((lessons: any) => lessons.lessons));
+    this.lessons$ = this.lessonsService.loadAllLessons().pipe(map((response: LessonsResponse) => response.lessons));
   }
 
 }
