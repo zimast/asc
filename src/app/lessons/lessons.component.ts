@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Lesson } from '../model/lesson.model';
 import { LessonsService } from '../services/lessons.service';
+import { Lesson } from '../models/lesson.model';
 
 interface LessonsResponse {
   lessons: Lesson[];

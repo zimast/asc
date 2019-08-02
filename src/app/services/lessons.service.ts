@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Lesson } from '../model/lesson.model';
+import { Lesson } from '../models/lesson.model';
 
 export interface LessonsResponse {
   lessons: Lesson[];
