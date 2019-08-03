@@ -10,6 +10,12 @@ import { AuthService } from '../services/auth.service';
 export class SignupComponent {
 
   public signupForm: FormGroup;
+  public errors: string[] = [];
+  public messagePerErrorCode = {
+    min: 'The minimum length is 10 characters',
+    uppercase: 'At least one upper case character',
+    digits: 'At lease one numeric character'
+  }
 
   constructor(private formBuilder: FormBuilder, private readonly authService: AuthService) {
     this.signupForm = this.formBuilder.group({
@@ -30,11 +36,11 @@ export class SignupComponent {
       this.authService.signUp(signupFormValue.email, signupFormValue.password)
         .subscribe(
           () => {
-            console.log('User created succesfully');
+            console.log('User created successfully');
           },
-          console.error
+          response => this.errors = response.error.errors
         )
-        
+
     }
   }
 
