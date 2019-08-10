@@ -7,11 +7,13 @@ import { readAllLessons } from "./read-all-lessons.route";
 import { createUser } from "./create-user.route";
 
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const commandLineArgs = require('command-line-args');
 
 const app: Application = express();
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 const optionDefinitions = [
   { name: 'secure', type: Boolean, defaultOption: false },
