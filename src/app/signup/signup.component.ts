@@ -19,9 +19,9 @@ export class SignupComponent {
 
   constructor(private formBuilder: FormBuilder, private readonly authService: AuthService) {
     this.signupForm = this.formBuilder.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required],
-      confirm: ['', Validators.required]
+      email: ['test@gmail.com', Validators.required],
+      password: ['Password10', Validators.required],
+      confirm: ['Password10', Validators.required]
     });
   }
 
