@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -17,7 +18,11 @@ export class SignupComponent {
     digits: 'At lease one numeric character'
   }
 
-  constructor(private formBuilder: FormBuilder, private readonly authService: AuthService) {
+  constructor(
+    private readonly formBuilder: FormBuilder, 
+    private readonly authService: AuthService,
+    private readonly router: Router  
+  ) {
     this.signupForm = this.formBuilder.group({
       email: ['test@gmail.com', Validators.required],
       password: ['Password10', Validators.required],
@@ -36,6 +41,7 @@ export class SignupComponent {
       this.authService.signUp(signupFormValue.email, signupFormValue.password)
         .subscribe(
           () => {
+            this.router.navigateByUrl('/');
             console.log('User created successfully');
           },
           response => this.errors = response.error.errors

@@ -22,6 +22,11 @@ class InMemoryDatabase {
     return user;
   }
 
+  findUserByEmail(email: string): DatabaseUser {
+    const users = _.values(USERS);
+    return _.find(users, user => user.email === email);
+  }
+
 }
 
 export const database = new InMemoryDatabase();

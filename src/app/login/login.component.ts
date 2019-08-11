@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']})
+  styleUrls: ['./login.component.css']
+})
 export class LoginComponent {
 
   public loginForm: FormGroup;
@@ -28,9 +29,14 @@ export class LoginComponent {
   }
 
   public login() {
-
     const value = this.loginForm.value;
+    if (value.email && value.password) {
+      this.authService.login(value.email, value.password)
+        .subscribe(() => {
+          this.router.navigateByUrl('/');
+          console.log('User is correctly logged in');
+        })
+    }
 
-    
   }
 }
