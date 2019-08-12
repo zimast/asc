@@ -2,11 +2,16 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LessonsComponent } from './lessons/lessons.component';
 import { SignupComponent } from './signup/signup.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   {
     path: 'lessons',
     component: LessonsComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   },
   {
     path: 'signup',

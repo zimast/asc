@@ -10,7 +10,7 @@ class InMemoryDatabase {
     return _.values(LESSONS);
   }
 
-  createUser(email: string, passwordDigest: string) {
+  public createUser(email: string, passwordDigest: string) {
     this.userCounter++;
     const id = this.userCounter;
     const user: DatabaseUser = {
@@ -19,6 +19,22 @@ class InMemoryDatabase {
       passwordDigest
     };
     USERS[id] = user;
+    return user;
+  }
+
+  public findUserByEmail(email: string): DatabaseUser {
+    const users = _.values(USERS);
+    return _.find(users, user => user.email === email);
+  }
+
+  public findUserById(userId: string): DatabaseUser {
+    let user = undefined;
+    if (userId) {
+      console.log("looking for userId ", userId);
+      const users = _.values(USERS);
+      user = _.find(users, user => user.id.toString() === userId);
+      console.log("user data found:", user);
+    }
     return user;
   }
 
