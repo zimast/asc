@@ -8,6 +8,7 @@ import { createUser } from "./create-user.route";
 import { getUser } from './get-user.route';
 import { logout } from './logout.route';
 import { login } from './login.route';
+import { retrieveUserIdFromRequest } from './get-user.middleware';
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -15,6 +16,7 @@ const commandLineArgs = require('command-line-args');
 
 const app: Application = express();
 
+app.use(retrieveUserIdFromRequest);
 app.use(bodyParser.json());
 app.use(cookieParser());
 

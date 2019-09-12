@@ -20,3 +20,9 @@ export async function createSessionToken(userId: string) {
     });
 
 }
+
+export async function decodeJsonWebToken(jsonWebToken: string) {
+    const payload = await jwt.verify(jsonWebToken, RSA_PUBLIC_KEY);
+    console.log('decoded Json Web Token payload', payload);
+    return payload;
+}
