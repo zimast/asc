@@ -7,3 +7,5 @@ const publicKey = fs.readFileSync("./demos/public.key");
 console.log("Verifying ...");
 const verify = jwt.verify(existingToken, publicKey);
 console.log("Decoded JWT:", verify);
+
+// iat: issued at ... epoch time
