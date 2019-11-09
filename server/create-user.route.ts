@@ -22,6 +22,6 @@ async function createUserAndSession(response: Response, credentials) {
 
   const sessionToken = await createSessionToken(user.id.toString());
 
-  response.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: true });
+  response.cookie('SESSIONID', sessionToken, { httpOnly: true, secure: true });
   response.status(HTTP_STATUS_CODES.success).json({ id: user.id, email: user.email });
 }

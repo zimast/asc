@@ -1,17 +1,14 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from './http-status-codes';
+import { database } from './database';
 
 export function getUser(request: Request, response: Response) {
 
-    //TODO retrieve the actual user based on JWT content
-    const user = {
-        email: 'test@gmail.com'
-    };
+    const user = database.findUserById(request['userId']);
 
     if (user) {
         response.status(HTTP_STATUS_CODES.success).json(user);
-    }
-    else {
+    } else {
         response.sendStatus(HTTP_STATUS_CODES.no_content);
     }
 }

@@ -14,8 +14,8 @@ export function retrieveUserIdFromRequest(
             .catch((error) => {
                 console.error(error);
                 next();
-            })
-    } 
+            });
+    }
 }
 
 async function handleSessionCookie(jsonWebToken: string, request: Request) {
@@ -23,7 +23,7 @@ async function handleSessionCookie(jsonWebToken: string, request: Request) {
         const jsonWebTokenPayload = await decodeJsonWebToken(jsonWebToken);
         request['userId'] = jsonWebTokenPayload.sub;
     } catch (error) {
-        console.log('Error: Could not extract user from request', error);
+        console.log('Error: Could not extract user from request', error.message);
     }
 
 }
