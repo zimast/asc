@@ -21,7 +21,7 @@ export class LessonsComponent implements OnInit {
 
   constructor(
     private readonly lessonsService: LessonsService,
-    private readonly authService: AuthService  
+    private readonly authService: AuthService
   ) { }
 
   ngOnInit() {

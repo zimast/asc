@@ -7,7 +7,7 @@ export function getUser(request: Request, response: Response) {
     const user = database.findUserById(request['userId']);
 
     if (user) {
-        response.status(HTTP_STATUS_CODES.success).json(user);
+        response.status(HTTP_STATUS_CODES.success).json({ email: user.email, id: user.id });
     } else {
         response.sendStatus(HTTP_STATUS_CODES.no_content);
     }

@@ -15,7 +15,7 @@ export async function createSessionToken(userId: string) {
 
     return await signJwt({}, RSA_PRIVATE_KEY, {
         algorithm: "RS256",
-        expiresIn: 240,
+        expiresIn: 20,
         subject: userId
     });
 
