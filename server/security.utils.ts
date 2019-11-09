@@ -26,3 +26,7 @@ export async function decodeJsonWebToken(jsonWebToken: string) {
     console.log('decoded Json Web Token payload', payload);
     return payload;
 }
+
+export async function createCsrfToken() {
+    return randomBytes(32).then();
+}
