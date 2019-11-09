@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, shareReplay, tap } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user.model';
+import * as auth0 from 'auth0-js';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 export const ANONYMOUS_USER: User = {
   id: undefined,
   email: ''
+};
+
+const AUTH_CONFIG = {
+  clientID: '2Q9woUlY4SnJ7YHjSmtXIrmhrNvU0cec',
+  domain: 'dev-asc01.eu.auth0.com'
 }
 
 @Injectable({
@@ -14,17 +21,32 @@ export const ANONYMOUS_USER: User = {
 })
 export class AuthService {
 
-  private subject: BehaviorSubject<User> = new BehaviorSubject<User>(ANONYMOUS_USER);
+  public auth0 = new auth0.WebAuth({
+    clientID: AUTH_CONFIG.clientID,
+    domain: AUTH_CONFIG.domain,
+    responseType: 'token id_token',
+    redirectUri: 'https://localhost:4200/lessons'
+  });
 
-  public user$: Observable<User> = this.subject.asObservable();
-  public isLoggedIn$: Observable<boolean> = this.user$.pipe(map(user => !!user.id));
-  public isLoggedOut$: Observable<boolean> = this.isLoggedIn$.pipe(map(isLoggedIn => !isLoggedIn));
+  private userSubject = new BehaviorSubject<User>(undefined);
+  user$: Observable<User> = this.userSubject.asObservable().pipe(filter(user => !!user));
 
-  constructor(private readonly httpClient: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) {}
 
-  public signUp(email: string, password: string) {
-    return this.httpClient.post<User>('/api/signup', { email, password }).pipe(
-      shareReplay(),
-      tap(user => this.subject.next(user)));
+  login() {
+    this.auth0.authorize();
   }
+
+  signUp() {}
+
+  logout() {}
+
+  isLoggedIn(): boolean {
+    return false;
+  }
+
+  isLoggedOut(): boolean {
+    return !this.isLoggedIn();
+  }
+
 }
