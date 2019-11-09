@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as argon2 from 'argon2';
 
 const util = require('util');
 const crypto = require('crypto');
@@ -27,6 +28,6 @@ export async function decodeJsonWebToken(jsonWebToken: string) {
     return payload;
 }
 
-export async function createCsrfToken() {
-    return randomBytes(32).then();
+export async function createCsrfToken(sessionToken: string) {
+    return argon2.hash(sessionToken);
 }

@@ -19,7 +19,7 @@ export function login(request: Request, response: Response) {
 async function loginAndBuildResponse(credentials: any, user: DatabaseUser, response: Response) {
     try {
         const sessionToken = await attemptLogin(credentials, user);
-        const csrfToken = await createCsrfToken();
+        const csrfToken = await createCsrfToken(sessionToken);
 
         console.log('Login successful');
         // httpOnly meaning NOT readable by javascript

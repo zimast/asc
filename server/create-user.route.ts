@@ -22,8 +22,7 @@ async function createUserAndSession(response: Response, credentials) {
   const user = database.createUser(credentials.email, passwordDigest);
 
   const sessionToken = await createSessionToken(user.id.toString());
-
-  const csrfToken = await createCsrfToken();
+  const csrfToken = await createCsrfToken(sessionToken);
 
   response.cookie('SESSIONID', sessionToken, { httpOnly: true, secure: true });
   response.cookie('XSRF-TOKEN', csrfToken);
