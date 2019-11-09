@@ -31,21 +31,40 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User>(undefined);
   user$: Observable<User> = this.userSubject.asObservable().pipe(filter(user => !!user));
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
-  login() {
+  public login(): void {
     this.auth0.authorize();
   }
 
-  signUp() {}
+  public signUp() { }
 
-  logout() {}
+  public retrieveAuthInfoFromUrl() {
+    this.auth0.parseHash((error, authenticationResult) => {
 
-  isLoggedIn(): boolean {
+      if (error) {
+        console.log('Could not parse the hash', error);
+      } else if (authenticationResult && authenticationResult.idToken) {
+        window.location.hash = '';
+        console.log('Authentication was successful, authentication result: ', authenticationResult);
+        // this.auth0.client.userInfo(authenticationResult.accessToken, (error, userProfile) => {})
+        this.setSession(authenticationResult);
+      }
+
+    });
+  }
+
+  private setSession(authenticationResult: auth0.Auth0DecodedHash) {
+    localStorage.setItem('id_token', authenticationResult.idToken);
+  }
+
+  public logout() { }
+
+  public isLoggedIn(): boolean {
     return false;
   }
 
-  isLoggedOut(): boolean {
+  public isLoggedOut(): boolean {
     return !this.isLoggedIn();
   }
 

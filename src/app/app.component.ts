@@ -11,11 +11,10 @@ export class AppComponent implements OnInit {
   public isLoggedIn: boolean;
   public isLoggedOut: boolean;
 
-  constructor(private authService: AuthService) { }
+  constructor(private readonly authService: AuthService) { }
 
   public ngOnInit(): void {
-    this.isLoggedIn = this.authService.isLoggedIn();
-    this.isLoggedOut = this.authService.isLoggedOut();
+    this.authService.retrieveAuthInfoFromUrl();
   }
 
   signUp() {
