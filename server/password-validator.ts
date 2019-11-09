@@ -1,6 +1,6 @@
 import * as passwordValidator from 'password-validator';
 
-var schema = new passwordValidator();
+const schema = new passwordValidator();
 
 schema
     .is().min(10)                                   // Minimum length 10

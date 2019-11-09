@@ -22,6 +22,36 @@ class InMemoryDatabase {
     return user;
   }
 
+  findUserByEmail(email: string): DatabaseUser {
+    const users = _.values(USERS);
+    return _.find(users, user => user.email === email);
+  }
+
+  findUserById(userId: string): DatabaseUser {
+    let user;
+    if (userId) {
+      console.log('looking for userId ', userId);
+      const users = _.values(USERS);
+      user = _.find(users, u => u.id.toString() === userId);
+      console.log('user data found:', user);
+    }
+
+    return user;
+  }
+
+
+  findUserByAuthenticationId(authenticationId: string) {
+    let user;
+    if (authenticationId) {
+      console.log('looking for user with authenticationId = ', authenticationId);
+      const users = _.values(USERS);
+      user = _.find(users, u => u.authenticationId === authenticationId);
+      console.log('user data found:', user);
+    }
+
+    return user;
+  }
+
 }
 
 export const database = new InMemoryDatabase();
