@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
-import { database } from "./database";
+import { Request, Response } from 'express';
+import { database } from './database';
 import * as argon2 from 'argon2';
-import { DatabaseUser } from "./database-user";
+import { DatabaseUser } from './database-user';
 import { HTTP_STATUS_CODES } from './http-status-codes';
+import { createSessionToken } from './security.utils';
 
 export function login(request: Request, response: Response) {
     const credentials = request.body;
@@ -18,12 +19,11 @@ export function login(request: Request, response: Response) {
 async function loginAndBuildResponse(credentials: any, user: DatabaseUser, response: Response) {
     try {
         const sessionToken = await attemptLogin(credentials, user);
-        console.log("Login successful");
-        response.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: true });
+        console.log('Login successful');
+        response.cookie('SESSIONID', sessionToken, { httpOnly: true, secure: true });
         response.status(HTTP_STATUS_CODES.success).json({ id: user.id, email: user.email });
-    }
-    catch (error) {
-        console.log("Login failed!");
+    } catch (error) {
+        console.log('Login failed!');
         response.sendStatus(HTTP_STATUS_CODES.forbidden);
     }
 }
@@ -31,9 +31,8 @@ async function loginAndBuildResponse(credentials: any, user: DatabaseUser, respo
 async function attemptLogin(credentials: any, user: DatabaseUser) {
     const isPasswordValid = await argon2.verify(user.passwordDigest, credentials.password);
     if (!isPasswordValid) {
-        throw new Error("Password Invalid");
+        throw new Error('Password Invalid');
     }
 
-    //TODO return JWT
-    return 1;
+    return createSessionToken(user.id.toString());
 }
