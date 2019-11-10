@@ -1,4 +1,3 @@
-
 import * as express from 'express';
 import { Application } from 'express';
 import * as fs from 'fs';
@@ -11,6 +10,9 @@ import { login } from './login.route';
 import { retrieveUserIdFromRequest } from './get-user.middleware';
 import { checkIfAuthenticated } from './auth.middleware';
 import { checkCsrfToken } from './csrf.middleware';
+import { checkIfAuthorized } from './authorization.middleware';
+import * as _ from 'lodash';
+import { loginAsUser } from './login-as-user.route';
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -30,7 +32,18 @@ const options = commandLineArgs(optionDefinitions);
 
 // REST API
 app.route('/api/lessons')
-  .get(checkIfAuthenticated, readAllLessons);
+  .get(
+    checkIfAuthenticated,
+    _.partial(checkIfAuthorized, ['STUDENT']),
+    readAllLessons
+  );
+
+app.route('/api/admin')
+  .post(
+    checkIfAuthenticated,
+    _.partial(checkIfAuthorized, ['ADMIN']),
+    loginAsUser
+  );
 
 app.route('/api/signup')
   .post(createUser);

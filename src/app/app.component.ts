@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { Observable } from 'rxjs';
+import { User } from './models/user.model';
 
 @Component({
   selector: 'app-root',
@@ -8,20 +9,21 @@ import { Observable } from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  // public user$: Observable<User>;
-  public isLoggedIn$: Observable<boolean>;
-  public isLoggedOut$: Observable<boolean>;
-  
-  constructor(private authService: AuthService) { }
 
-  public ngOnInit(): void {
+  isLoggedIn$: Observable<boolean>;
+  isLoggedOut$: Observable<boolean>;
+  user$: Observable<User>;
+
+  constructor(private authService: AuthService) {}
+
+  ngOnInit() {
     this.isLoggedIn$ = this.authService.isLoggedIn$;
     this.isLoggedOut$ = this.authService.isLoggedOut$;
+    this.user$ = this.authService.user$;
   }
 
-  public logout() {
-
+  logout() {
     this.authService.logout().subscribe();
-
   }
+
 }
