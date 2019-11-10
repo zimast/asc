@@ -27,7 +27,7 @@ async function loginAndBuildResponse(credentials: any, user: DatabaseUser, respo
         // secure - Ensures the browser only sends the cookie over HTTPS.
         response.cookie('SESSIONID', sessionToken, { httpOnly: true, secure: true });
         response.cookie('XSRF-TOKEN', csrfToken);
-        response.status(HTTP_STATUS_CODES.success).json({ id: user.id, email: user.email });
+        response.status(HTTP_STATUS_CODES.success).json({ id: user.id, email: user.email, roles: user.roles });
     } catch (error) {
         console.log('Login failed!');
         response.sendStatus(HTTP_STATUS_CODES.forbidden);
@@ -40,5 +40,5 @@ async function attemptLogin(credentials: any, user: DatabaseUser) {
         throw new Error('Password Invalid');
     }
 
-    return createSessionToken(user.id.toString());
+    return createSessionToken(user);
 }

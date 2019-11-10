@@ -21,7 +21,7 @@ async function createUserAndSession(response: Response, credentials) {
   const passwordDigest = await argon2.hash(credentials.password);
   const user = database.createUser(credentials.email, passwordDigest);
 
-  const sessionToken = await createSessionToken(user.id.toString());
+  const sessionToken = await createSessionToken(user);
   const csrfToken = await createCsrfToken(sessionToken);
 
   response.cookie('SESSIONID', sessionToken, { httpOnly: true, secure: true });

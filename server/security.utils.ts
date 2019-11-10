@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as argon2 from 'argon2';
+import { DatabaseUser } from './database-user';
 
 const util = require('util');
 const crypto = require('crypto');
@@ -12,13 +13,19 @@ const RSA_PRIVATE_KEY = fs.readFileSync('./demos/private.key');
 const RSA_PUBLIC_KEY = fs.readFileSync('./demos/public.key');
 const SESSION_DURATION = 1000;
 
-export async function createSessionToken(userId: string) {
+export async function createSessionToken(user: DatabaseUser) {
 
-    return await signJwt({}, RSA_PRIVATE_KEY, {
-        algorithm: 'RS256',
-        expiresIn: SESSION_DURATION,
-        subject: userId
-    });
+    return await signJwt(
+        {
+            roles: user.roles
+        },
+        RSA_PRIVATE_KEY,
+        {
+            algorithm: 'RS256',
+            expiresIn: SESSION_DURATION,
+            subject: user.id.toString()
+        }
+    );
 
 }
 
