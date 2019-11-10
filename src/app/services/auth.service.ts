@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
 import * as auth0 from 'auth0-js';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { shareReplay, tap } from 'rxjs/operators';
 import { filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +16,7 @@ export const ANONYMOUS_USER: User = {
 const AUTH_CONFIG = {
   clientID: '2Q9woUlY4SnJ7YHjSmtXIrmhrNvU0cec',
   domain: 'dev-asc01.eu.auth0.com'
-}
+};
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,16 @@ export class AuthService {
     scope: 'openid email'
   });
 
-  constructor(private http: HttpClient, private router: Router) { }
+  private subject = new BehaviorSubject<User>(undefined);
+  public user$: Observable<User> = this.subject.asObservable().pipe(filter((user: User) => !!undefined));
+
+  constructor(private http: HttpClient, private router: Router) {
+
+    if (this.isLoggedIn()) {
+      this.userInfo();
+    }
+
+  }
 
   public login(): void {
     this.auth0.authorize({
@@ -54,9 +64,20 @@ export class AuthService {
         console.log('Authentication was successful, authentication result: ', authenticationResult);
         // this.auth0.client.userInfo(authenticationResult.accessToken, (error, userProfile) => {})
         this.setSession(authenticationResult);
+
+        this.userInfo();
       }
 
     });
+  }
+
+  public userInfo() {
+    this.http.put<User>('/api/userinfo', null )
+      .pipe(
+        shareReplay(), // prevent to send multiple put if used elsewhere
+        tap(user => this.subject.next(user))
+      )
+      .subscribe();
   }
 
   public getExpiration() {
