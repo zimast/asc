@@ -4,13 +4,36 @@ import { Application } from 'express';
 import * as fs from 'fs';
 import * as https from 'https';
 import { readAllLessons } from './read-all-lessons.route';
+import * as expressJwt from 'express-jwt';
+import * as jwksRsa from 'jwks-rsa';
 
 const bodyParser = require('body-parser');
 const commandLineArgs = require('command-line-args');
 
 const app: Application = express();
+const checkIfAuthenticated = expressJwt({
+  secret: jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true, // protection against attacker having control of jwksUri and rotating keys every second and blocking our authentication
+    jwksUri: 'https://dev-asc01.eu.auth0.com/.well-known/jwks.json'
+  }),
+  algorithms: ['RS256'],
+
+});
 
 app.use(bodyParser.json());
+app.use(checkIfAuthenticated);
+
+app.use((error, request, response, next) => {
+
+  // error.name from express-jwt library documentation
+  if (error && error.name === 'UnauthorizedError') {
+    response.status(error.status).json({message: error.message});
+  } else {
+    next();
+  }
+
+});
 
 const optionDefinitions = [
   { name: 'secure', type: Boolean, defaultOption: false },
