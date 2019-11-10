@@ -26,16 +26,23 @@ export class AuthService {
     clientID: AUTH_CONFIG.clientID,
     domain: AUTH_CONFIG.domain,
     responseType: 'token id_token',
-    redirectUri: 'https://localhost:4200/lessons'
+    redirectUri: 'https://localhost:4200/lessons',
+    scope: 'openid email'
   });
 
   constructor(private http: HttpClient, private router: Router) { }
 
   public login(): void {
-    this.auth0.authorize();
+    this.auth0.authorize({
+      mode: 'login'
+    });
   }
 
-  public signUp() { }
+  public signUp() {
+    this.auth0.authorize({
+      mode: 'signUp'
+    });
+  }
 
   public retrieveAuthInfoFromUrl() {
     this.auth0.parseHash((error, authenticationResult) => {
