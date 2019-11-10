@@ -1,47 +1,58 @@
+
+import { shareReplay, filter, tap, map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, shareReplay, tap, filter } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { User } from '../models/user.model';
 
 export const ANONYMOUS_USER: User = {
   id: undefined,
-  email: ''
-}
+  email: undefined,
+  roles: []
+};
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private subject: BehaviorSubject<User> = new BehaviorSubject<User>(ANONYMOUS_USER);
+  private subject = new BehaviorSubject<User>(undefined);
 
-  // public user$: Observable<User> = this.subject.asObservable().pipe(filter(user => !!user));
-  public user$: Observable<User> = this.subject.asObservable();
-  public isLoggedIn$: Observable<boolean> = this.user$.pipe(map(user => !!user.id));
-  public isLoggedOut$: Observable<boolean> = this.isLoggedIn$.pipe(map(isLoggedIn => !isLoggedIn));
+  user$: Observable<User> = this.subject.asObservable().pipe(filter(user => !!user));
 
-  constructor(private readonly httpClient: HttpClient) {
-    httpClient.get<User>('/api/user')
-      .subscribe((user: any) => this.subject.next(user ? user : ANONYMOUS_USER));
+  isLoggedIn$: Observable<boolean> = this.user$.pipe(map(user => !!user.id));
+
+  isLoggedOut$: Observable<boolean> = this.isLoggedIn$.pipe(map(isLoggedIn => !isLoggedIn));
+
+  constructor(private http: HttpClient) {
+    http.get<User>('/api/user').pipe(
+      tap(console.log))
+      .subscribe(user => this.subject.next(user ? user : ANONYMOUS_USER));
   }
 
-  public signUp(email: string, password: string) {
-    return this.httpClient.post<User>('/api/signup', { email, password }).pipe(
+  signUp(email: string, password: string) {
+
+    return this.http.post<User>('/api/signup', { email, password }).pipe(
       shareReplay(),
       tap(user => this.subject.next(user)));
   }
 
-  public logout(): Observable<any> {
-    return this.httpClient.post('/api/logout', null).pipe(
-      shareReplay(),
-      tap(user => this.subject.next(ANONYMOUS_USER))
-    );
-  }
-
-  public login(email: string, password: string) {
-    return this.httpClient.post<User>('/api/login', { email, password }).pipe(
+  login(email: string, password: string) {
+    return this.http.post<User>('/api/login', { email, password }).pipe(
       shareReplay(),
       tap(user => this.subject.next(user)));
+  }
+
+  loginAsUser(email: string) {
+    return this.http.post<User>('/api/admin', { email }).pipe(
+      shareReplay(),
+      tap(user => this.subject.next(user)));
+  }
+
+  logout(): Observable<any> {
+    return this.http.post('/api/logout', null).pipe(
+      shareReplay(),
+      tap(user => this.subject.next(ANONYMOUS_USER)));
   }
 }
