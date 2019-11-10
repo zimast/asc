@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import * as moment from 'moment';
 
 export const ANONYMOUS_USER: User = {
   id: undefined,
@@ -27,9 +28,6 @@ export class AuthService {
     responseType: 'token id_token',
     redirectUri: 'https://localhost:4200/lessons'
   });
-
-  private userSubject = new BehaviorSubject<User>(undefined);
-  user$: Observable<User> = this.userSubject.asObservable().pipe(filter(user => !!user));
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -54,14 +52,30 @@ export class AuthService {
     });
   }
 
-  private setSession(authenticationResult: auth0.Auth0DecodedHash) {
-    localStorage.setItem('id_token', authenticationResult.idToken);
+  public getExpiration() {
+    const expiration = localStorage.getItem('expires_at');
+    const expiresAt = JSON.parse(expiration);
+    return moment(expiresAt);
   }
 
-  public logout() { }
+  private setSession(authenticationResult: auth0.Auth0DecodedHash) {
+
+    const expiresAt = moment().add(authenticationResult.expiresIn, 'seconds');
+    localStorage.setItem('id_token', authenticationResult.idToken);
+    localStorage.setItem('expires_at', JSON.stringify(expiresAt.valueOf()));
+  }
+
+  public logout() {
+
+    localStorage.removeItem('id_token');
+    localStorage.removeItem('expires_at');
+    this.router.navigate(['/lessons']);
+
+
+  }
 
   public isLoggedIn(): boolean {
-    return false;
+    return moment().isBefore(this.getExpiration());
   }
 
   public isLoggedOut(): boolean {
