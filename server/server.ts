@@ -6,6 +6,7 @@ import * as https from 'https';
 import { readAllLessons } from './read-all-lessons.route';
 import * as expressJwt from 'express-jwt';
 import * as jwksRsa from 'jwks-rsa';
+import { userInfo } from './user-info.route';
 
 const bodyParser = require('body-parser');
 const commandLineArgs = require('command-line-args');
@@ -44,6 +45,9 @@ const options = commandLineArgs(optionDefinitions);
 // REST API
 app.route('/api/lessons')
   .get(readAllLessons);
+
+app.route('/api/userinfo')
+  .put(userInfo);
 
 if (options.secure) {
   const httpsServer = https.createServer({
