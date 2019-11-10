@@ -10,6 +10,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { AdminComponent } from './admin/admin.component';
 import { RbacAllowDirective } from './common/rbac-allow.directive';
+import { AuthorizationGuard } from './services/authorization.guard';
+import { AuthService } from './services/auth.service';
+import { Router } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -30,7 +33,16 @@ import { RbacAllowDirective } from './common/rbac-allow.directive';
     }),
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [{
+    provide: 'adminsOnlyGuard',
+    useFactory: (authService: AuthService, router: Router) => {
+      return new AuthorizationGuard(['ADMIN'], authService, router);
+    },
+    deps: [
+      AuthService,
+      Router
+    ]
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
