@@ -9,6 +9,7 @@ import { SignupComponent } from './signup/signup.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { AdminComponent } from './admin/admin.component';
+import { RbacAllowDirective } from './common/rbac-allow.directive';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { AdminComponent } from './admin/admin.component';
     LessonsComponent,
     SignupComponent,
     LoginComponent,
-    AdminComponent
+    AdminComponent,
+    RbacAllowDirective
   ],
   imports: [
     BrowserModule,
